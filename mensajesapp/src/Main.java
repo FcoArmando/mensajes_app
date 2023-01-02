@@ -27,10 +27,10 @@ public class Main {
                     MensajeService.listarMensaje();
                     break;
                 case 3:
-                    MensajeService.borrarMensaje();
+                    MensajeService.editarMensaje();
                     break;
                 case 4:
-                    MensajeService.editarMensaje();
+                    MensajeService.borrarMensaje();
                     break;
             }
         }while (opcion != 5);
