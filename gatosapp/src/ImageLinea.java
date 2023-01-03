@@ -1,5 +1,6 @@
 public class ImageLinea {
     String id;
+    String url;
 
     public String getId() {
         return id;
@@ -17,5 +18,4 @@ public class ImageLinea {
         this.url = url;
     }
 
-    String url;
 }

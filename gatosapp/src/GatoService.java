@@ -51,9 +51,10 @@ public class GatoService {
 
             int seleccion = -1;
             for (int i = 0; i < seleccion; i++) {
-                if (opcion.equals(botones[i])){
+                if (opcion.equals(botones[i])) {
                     seleccion = i;
                 }
+            }
                 switch (seleccion){
                     case 0:
                         verGatos();
@@ -64,7 +65,6 @@ public class GatoService {
                     default:
                         break;
                 }
-            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -88,7 +88,86 @@ public class GatoService {
         }
     }
 
-    public static void verFavorito(String apikey) {
-        
+    public static void verFavorito(String apikey) throws IOException {
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        MediaType mediaType = MediaType.parse("application/json");
+        RequestBody body = RequestBody.create(mediaType, "");
+        Request request = new Request.Builder()
+                .url("https://api.thecatapi.com/v1/favourites")
+                .method("GET", null)
+                .addHeader("x-api-key", "live_bCQECldoqOBHfmmqXORTWwXJH7yEfte3MAmuGVUOp83dxbQqBGECiSGLbSHGteP0")
+                .addHeader("Content-Type", "application/json")
+                .build();
+        Response response = client.newCall(request).execute();
+
+        String elJson = response.body().string();
+
+        Gson gson = new Gson();
+
+        GatoFavs[] gatosArray = gson.fromJson(elJson,GatoFavs[].class);
+
+        if (gatosArray.length > 0){
+            int min = 1;
+            int max = gatosArray.length;
+            int aleatorio = (int) (Math.random() * ((max-min) + 1));
+            int indice = aleatorio;
+            GatoFavs gatoFavs = gatosArray[indice];
+            Image image = null;
+            try {
+                URL url = new URL(gatoFavs.image.getUrl());
+                image = ImageIO.read(url);
+
+                ImageIcon fondoGato = new ImageIcon(image);
+
+                if (fondoGato.getIconWidth() > 800){
+                    Image fondo = fondoGato.getImage();
+                    Image modificada = fondo.getScaledInstance(800,600, Image.SCALE_SMOOTH);
+                    fondoGato = new ImageIcon(modificada);
+                }
+
+                String menu = "opciones\n" +
+                        "1. Ver otra imagen de otro gato\n" +
+                        "2. Eliminar Favorito\n" +
+                        "3. Volver\n";
+                String botones[] = {"Ver otra imagen", "Eliminar Favorito", "Volver"};
+                String id_gato = gatoFavs.getId();
+                String opcion = (String) JOptionPane.showInputDialog(null, menu, id_gato, JOptionPane.INFORMATION_MESSAGE, fondoGato, botones, botones[0]);
+
+                int seleccion = -1;
+                for (int i = 0; i < seleccion; i++) {
+                    if (opcion.equals(botones[i])) {
+                        seleccion = i;
+                    }
+                }
+                    switch (seleccion) {
+                        case 0:
+                            verFavorito(apikey);
+                            break;
+                        case 1:
+                            borrarFavorito(gatoFavs);
+                            break;
+                        default:
+                            break;
+                    }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private static void borrarFavorito(GatoFavs gatoFavs) throws IOException {
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        MediaType mediaType = MediaType.parse("application/json");
+        RequestBody body = RequestBody.create(mediaType, "");
+        Request request = new Request.Builder()
+                .url("https://api.thecatapi.com/v1/favourites/"+gatoFavs.getId()+"")
+                .method("DELETE", body)
+                .addHeader("x-api-key", "live_bCQECldoqOBHfmmqXORTWwXJH7yEfte3MAmuGVUOp83dxbQqBGECiSGLbSHGteP0")
+                .addHeader("Content-Type", "application/json")
+                .build();
+        Response response = client.newCall(request).execute();
+
     }
 }

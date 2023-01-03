@@ -4,7 +4,7 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException {
         int opcionMenu = -1;
-        String[] botones = {"1. Ver gatos", "2. Salir"};
+        String[] botones = {"1. Ver gatos", "2. Ver Favoritos" ,"3. Salir"};
 
         do{
             String opcion  = (String) JOptionPane.showInputDialog(null, "Gatitos Java", "Menu principal",
@@ -23,6 +23,7 @@ public class Main {
                     Gato gatito = new Gato();
                     GatoService.verFavorito(gatito.apiKey);
                     break;
+                case 2:
                 default:
                     break;
             }

@@ -9,7 +9,7 @@ public class Gato {
     }
 
     public void setId(String id) {
-        this.id = String.valueOf(id);
+        this.id = id;
     }
 
     public String getUrl() {
